@@ -27,6 +27,13 @@ const productSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		role:{
+			type:String,
+			default:''
+		},
+		userId:{
+			type:String
+		}
 	},
 	{ timestamps: true }
 );

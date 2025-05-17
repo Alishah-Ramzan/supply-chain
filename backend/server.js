@@ -9,6 +9,7 @@ import cartRoutes from "./routes/cart.route.js";
 import couponRoutes from "./routes/coupon.route.js";
 import paymentRoutes from "./routes/payment.route.js";
 import analyticsRoutes from "./routes/analytics.route.js";
+// import sellerRoute from "./routes/sellerProductRoute.js";
 
 import { connectDB } from "./lib/db.js";
 
@@ -24,6 +25,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
+// app.use("/api/products", sellerRoute);
 app.use("/api/cart", cartRoutes);
 app.use("/api/coupons", couponRoutes);
 app.use("/api/payments", paymentRoutes);

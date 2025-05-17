@@ -2,32 +2,27 @@ import { redis } from "../lib/redis.js";
 import cloudinary from "../lib/cloudinary.js";
 import Product from "../models/product.model.js";
 
-export const getAdminProducts = async (req, res) => {
+export const getAllProducts = async (req, res) => {
 	try {
-		console.log("Admin →", req.user.role, req.user._id);
+		console.log("req",req.user)
+		const checkRole = req.user.role
+		if(checkRole==='admin'){
+		const products = await Product.find({});
+		res.json({ products });
 
-		const products = await Product.find({}); // Admin sees all
+		}
+		if(checkRole==='seller'){
+			const user=req.user._id
+			const userdata=await Product.findById({user})
+			console.log(userdata)
+			res.json({ userdata });
 
-		res.status(200).json({ data: products });
+		}
 	} catch (error) {
-		console.log("Error in getAdminProducts controller:", error.message);
+		console.log("Error in getAllProducts controller", error.message);
 		res.status(500).json({ message: "Server error", error: error.message });
 	}
 };
-
-export const getSellerProducts = async (req, res) => {
-	try {
-		console.log("Seller →", req.user.role, req.user._id);
-
-		const products = await Product.find({userId : req.user._id }); // Filter by seller
-
-		res.status(200).json({ data: products });
-	} catch (error) {
-		console.log("Error in getSellerProducts controller:", error.message);
-		res.status(500).json({ message: "Server error", error: error.message });
-	}
-};
-
 
 export const getFeaturedProducts = async (req, res) => {
 	try {
@@ -56,35 +51,6 @@ export const getFeaturedProducts = async (req, res) => {
 	}
 };
 
-export const adminHandler = async (req, res) => {
-	try {
-		const { name, description, price, image, category } = req.body;
-		console.log("req",req.user)
-		console.log("body",req.body)
-		console.log("Req.user.role",req.user.role)
-
-		let cloudinaryResponse = null;
-
-		if (image) {
-			cloudinaryResponse = await cloudinary.uploader.upload(image, { folder: "products" });
-		}
-
-		const product = await Product.create({
-			name,
-			description,
-			price,
-			image: cloudinaryResponse?.secure_url ? cloudinaryResponse.secure_url : "",
-			category,
-			role:req.user.role
-
-		});
-
-		res.status(201).json(product);
-	} catch (error) {
-		console.log("Error in createProduct controller", error.message);
-		res.status(500).json({ message: "Server error", error: error.message });
-	}
-};
 export const sellerHandler = async (req, res) => {
 	try {
 		const { name, description, price, image, category } = req.body;
@@ -104,8 +70,7 @@ export const sellerHandler = async (req, res) => {
 			price,
 			image: cloudinaryResponse?.secure_url ? cloudinaryResponse.secure_url : "",
 			category,
-			role:req.user.role,
-			userId: req.user._id.toString() // Important!
+			role:req.user.role
 		});
 
 		res.status(201).json(product);

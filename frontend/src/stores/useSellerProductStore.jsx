@@ -2,7 +2,7 @@ import { create } from "zustand";
 import toast from "react-hot-toast";
 import axios from "../lib/axios";
 
-export const useProductStore = create((set) => ({
+export const useSellerProductStore = create((set) => ({
 	products: [],
 	loading: false,
 
@@ -10,7 +10,7 @@ export const useProductStore = create((set) => ({
 	createProduct: async (productData) => {
 		set({ loading: true });
 		try {
-			const res = await axios.post("/products/admin-action", productData);
+			const res = await axios.post("/products/seller-action", productData);
 			console.log("res",res)
 			set((prevState) => ({
 				products: [...prevState.products, res.data],
@@ -24,8 +24,8 @@ export const useProductStore = create((set) => ({
 	fetchAllProducts: async () => {
 		set({ loading: true });
 		try {
-			const response = await axios.get("/products/admin-get-product");
-			console.log("response",response)
+			const response = await axios.get("/products/seller-get-product");
+			console.log("response aabaabab",response)
 			set({ products: response.data.data, loading: false });
 		} catch (error) {
 			set({ error: "Failed to fetch products", loading: false });

@@ -5,6 +5,7 @@ import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import AdminPage from "./pages/AdminPage";
 import CategoryPage from "./pages/CategoryPage";
+import SellerPage from "./pages/sellerPage"
 
 import Navbar from "./components/Navbar";
 import { Toaster } from "react-hot-toast";
@@ -49,6 +50,10 @@ function App() {
 					<Route
 						path='/secret-dashboard'
 						element={user?.role === "admin" ? <AdminPage /> : <Navigate to='/login' />}
+					/>
+					<Route
+						path='/seller-dashboard'
+						element={user?.role === "seller" ? <SellerPage /> : <Navigate to='/login' />}
 					/>
 					<Route path='/category/:category' element={<CategoryPage />} />
 					<Route path='/cart' element={user ? <CartPage /> : <Navigate to='/login' />} />
